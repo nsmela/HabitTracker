@@ -1,7 +1,13 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
+using System.Globalization;
 
 namespace HabitTracker {
+
+    class Habit {
+        public int ID { get; set; }
+        public DateTime Date { get; set; }  
+        public int Quantity { get; set; }
+    }
 
     class Program {
         const string connectionString = @"Data Source=habit-Tracker.db";
@@ -72,6 +78,9 @@ Type your choice:
                     case "3":
                         DeleteRecord();
                         continue;
+                    case "4":
+                        UpdateRecord();
+                        continue;
                     default:
                         Console.WriteLine("Invalid entry. Please try again.");
                         Console.ReadKey();
@@ -98,46 +107,107 @@ Type your choice:
         }
 
         static void ViewAllRecords() {
-            Console.Clear();
-            
+            GetAllRecords();
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
         }
 
         private static void InsertRecord() {
             string date = GetDateInput();
-            int quantity = GetNumberOutput();
+            int quantity = GetNumberInput();
 
             string command = $"INSERT into {tableName} (date, quantity) VALUES('{date}', {quantity})";
             SendCommand(command);
         }
         static private void DeleteRecord() {
+            GetAllRecords();
             int id = GetRecordId();
 
-            string command = $"DELETE from {tableName} where id = {id}";
+            string command = $"DELETE from {tableName} where Id = {id}";
             SendCommand(command);
         }
 
         static private void UpdateRecord() {
+            GetAllRecords();
             Console.WriteLine("Updating specific record:");
 
             int id = GetRecordId();
-            string date = GetDateInput();
-            int quantity = GetNumberOutput();
+            if (!CheckIfExists(id)) {
+                Console.WriteLine($"Record: {id} does not exist!");
+                return;
+            }
 
-            string command = $"";
+            string date = GetDateInput();
+            int quantity = GetNumberInput();
+
+            string command = $"UPDATE {tableName} SET date = '{date}', quantity = {quantity} WHERE Id = {id}";
+            SendCommand(command);
+        }
+        static void GetAllRecords() {
+            using (var connection = new SqliteConnection(connectionString)) {
+                connection.Open();
+                var tableCommand = connection.CreateCommand();
+                tableCommand.CommandText =
+                    $"SELECT * from {tableName} ";
+
+                List<Habit> habits = new();
+                SqliteDataReader reader = tableCommand.ExecuteReader();
+
+                if (reader.HasRows) {
+                    while (reader.Read()) {
+                        var habit = new Habit {
+                            ID = reader.GetInt32(0),
+                            Date = DateTime.ParseExact(reader.GetString(1), "dd-mm-yy", new CultureInfo("en-US")),
+                            Quantity = reader.GetInt32(2)
+                        };
+
+                        habits.Add(habit);
+                    }
+
+                    Console.WriteLine(@"  ID  DATE                     QUANTITY");
+                    foreach (var habit in habits) {
+                        Console.Write($"| {habit.ID} ");
+                        Console.Write($"| {habit.Date.ToString()} ");
+                        Console.WriteLine($"| {habit.Quantity} |");
+                    }
+                }
+                else {
+                    Console.WriteLine("No rows found!");
+                }
+            }
         }
 
+        static bool CheckIfExists(int id) {
+            using (var connection = new SqliteConnection(connectionString)) {
+                connection.Open();
+
+                var checkCommand = connection.CreateCommand();
+                checkCommand.CommandText =
+                    $"SELECT EXISTS (SELECT 1 FROM {tableName} WHERE Id = {id})";
+                var checkQuery = Convert.ToInt32( checkCommand.ExecuteScalar());
+
+                return  checkQuery > 0;
+            }
+        }
 
         static string GetDateInput() {
-            Console.WriteLine(@"Please insert the date (dd/mm/yy) or type 0 to return to main menu");
 
-            string dateInput = Console.ReadLine();
-            if (dateInput == "0") GetUserInput();
+            string dateInput = "";
+            bool success = false;
+            while (!success) {
+                Console.WriteLine(@"Please insert the date (dd-mm-yy)");
+                dateInput = Console.ReadLine();
 
-            //TODO: check date format
-
+                if (DateTimeOffset.TryParse(dateInput, out DateTimeOffset result)){
+                    success = true;
+                }
+                else {
+                    Console.WriteLine("Invalid entry! Try again!");
+                }
+            }
             return dateInput;
         }
-        private static int GetNumberOutput() {
+        private static int GetNumberInput() {
             Console.WriteLine(@"Please enter the quantity");
 
             string numberInput = Console.ReadLine();
@@ -146,7 +216,7 @@ Type your choice:
 
             if (!success || value == 0) {
                 Console.WriteLine("Invalid entry! Pelase try again.");
-                value = GetNumberOutput();
+                value = GetNumberInput();
             }
 
             return value;

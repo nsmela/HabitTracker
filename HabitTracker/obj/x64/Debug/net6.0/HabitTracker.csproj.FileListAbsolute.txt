@@ -7,7 +7,6 @@ C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net
 C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\HabitTracker.deps.json
 C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\HabitTracker.runtimeconfig.json
 C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\HabitTracker.dll
-C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\ref\HabitTracker.dll
 C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\HabitTracker.pdb
 C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\Microsoft.Data.Sqlite.dll
 C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\SQLitePCLRaw.core.dll
@@ -33,3 +32,4 @@ C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net
 C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\bin\x64\Debug\net6.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\nsmel\Documents\Programming\HabitTracker\HabitTracker\obj\x64\Debug\net6.0\refint\HabitTracker.dll
