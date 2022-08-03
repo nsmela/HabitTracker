@@ -69,6 +69,9 @@ Type your choice:
                     case "2":
                         InsertRecord();
                         continue;
+                    case "3":
+                        DeleteRecord();
+                        continue;
                     default:
                         Console.WriteLine("Invalid entry. Please try again.");
                         Console.ReadKey();
@@ -106,6 +109,22 @@ Type your choice:
             string command = $"INSERT into {tableName} (date, quantity) VALUES('{date}', {quantity})";
             SendCommand(command);
         }
+        static private void DeleteRecord() {
+            int id = GetRecordId();
+
+            string command = $"DELETE from {tableName} where id = {id}";
+            SendCommand(command);
+        }
+
+        static private void UpdateRecord() {
+            Console.WriteLine("Updating specific record:");
+
+            int id = GetRecordId();
+            string date = GetDateInput();
+            int quantity = GetNumberOutput();
+
+            string command = $"";
+        }
 
 
         static string GetDateInput() {
@@ -132,5 +151,25 @@ Type your choice:
 
             return value;
         }
+
+        static int GetRecordId() {
+            int id = 0;
+            bool success = false;
+            string recordId;
+
+            while (!success) {
+                Console.WriteLine("Enter record ID number:");
+                recordId = Console.ReadLine();
+
+                success = int.TryParse(recordId, out id);
+
+                if (!success) {
+                    Console.WriteLine("Invalid input! Try again!");
+                }
+            }
+
+            return id;
+        }
+
     }
 }
